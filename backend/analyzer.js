@@ -3,7 +3,6 @@ import path from "path";
 import { parse } from "@babel/parser";
 import traverseModule from "@babel/traverse";
 import { execSync } from "child_process";
-import path from "path";
 
 
 const traverse = traverseModule.default;

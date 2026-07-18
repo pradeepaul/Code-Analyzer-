@@ -43,3 +43,9 @@ jobs:
               repo: context.repo.repo,
               body: `📊 Analyzer Results:\n\`\`\`json\n${results}\n\`\`\``
             });
+
+      - name: Upload analyzer report
+        uses: actions/upload-artifact@v4
+        with:
+          name: analyzer-report
+          path: report/jscp-report.json

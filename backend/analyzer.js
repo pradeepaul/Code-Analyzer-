@@ -155,6 +155,11 @@ export async function analyzeCodebase(srcDir = SRC_DIR) {
 (async () => {
   try {
     const results = await analyzeCodebase("../src");
+
+
+    // Save report to file for artifact upload
+    fs.writeFileSync("backend/report.json", JSON.stringify(results, null, 2));
+
     // Fail the pipeline if thresholds exceeded
     if (results.largeComponents.length > 0 || results.duplicates > 0) {
       console.error("❌ Technical debt issues detected!");

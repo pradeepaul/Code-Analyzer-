@@ -3,6 +3,8 @@ import path from "path";
 import { parse } from "@babel/parser";
 import traverseModule from "@babel/traverse";
 import { execSync } from "child_process";
+import path from "path";
+
 
 const traverse = traverseModule.default;
 
@@ -156,14 +158,20 @@ export async function analyzeCodebase(srcDir = SRC_DIR) {
   try {
     const results = await analyzeCodebase("../src");
 
+    // Ensure backend folder exists
+    const reportDir = path.join(process.cwd(), "backend");
+    if (!fs.existsSync(reportDir)) {
+      fs.mkdirSync(reportDir, { recursive: true });
+    }
 
-    // Save report to file for artifact upload
-    fs.writeFileSync("backend/report.json", JSON.stringify(results, null, 2));
+    const reportPath = path.join(reportDir, "report.json");
+    fs.writeFileSync(reportPath, JSON.stringify(results, null, 2));
 
-    // Fail the pipeline if thresholds exceeded
+    console.log("📊 Technical Debt Report saved to", reportPath);
+
     if (results.largeComponents.length > 0 || results.duplicates > 0) {
       console.error("❌ Technical debt issues detected!");
-      process.exit(1); // non‑zero exit code stops CI
+      process.exit(1);
     }
   } catch (err) {
     console.error("Analyzer failed:", err);
